@@ -1,0 +1,83 @@
+﻿@model IEnumerable<WebApplication1.Models.Product>
+
+@{
+    ViewData["Title"] = "Products in Category";
+    Layout = "_AdminLayout";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h1>@ViewBag.CategoryName</h1>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Count</th>
+                <th>Price</th>
+              
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var product in Model)
+            {
+                <tr>
+                    <td><img src="~/Uploads/@product.ImgUrl" alt="Product Image" style="max-height: 100px;"></td>
+                    <td>@product.Name</td>
+                    <td>@product.Description</td>
+                    <td>@product.Count</td>
+                    <td>@product.Price</td>
+                  
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            loadProductData(1);
+
+            function loadProductData(pageNumber) {
+                $.ajax({
+                    url: '/Product/GetAll',
+                    type: 'GET',
+                    data: { pageNumber: pageNumber, pageSize: 5 }, // Adjust page size as needed
+                    success: function (data) {
+                        $('#productTableContainer').html(data);
+                        displayPagination(pageNumber);
+                    },
+                    error: function () {
+                        console.log('Error loading data.');
+                    }
+                });
+            }
+
+            function displayPagination(pageNumber) {
+                var pagination = $('#pagination');
+                pagination.empty();
+
+                for (var i = 1; i <= @ViewBag.PageCount; i++) {
+                    var li = '<li class="page-item rounded' + (i === pageNumber ? ' active' : '') + '"style="background-color: #863F17;" >' +
+                        '<a style="background-color: #863F17;" class="page-link border-0 rounded" href="#" data-page="' + i + '">' + i + '</a>' +
+                        '</li>';
+
+                    pagination.append(li);
+                }
+
+                pagination.find('a').click(function (e) {
+                    e.preventDefault();
+                    loadProductData($(this).data('page'));
+                });
+            }
+        });
+    </script>
+}

@@ -1,0 +1,40 @@
+﻿@model WebApplication1.Models.Product
+
+@{
+    ViewData["Title"] = "Delete";
+    Layout = "_AdminLayout";
+
+}
+
+<center>
+    <div class="align-content-center">
+        <div class="container">
+            <div class="card shadow rounded" style="width: 35rem; border: 1px solid #863F17; background-color: #F8FAE5;">
+                <img src="~/images/delete.svg" height="300px" class="card-img-top" alt="delete">
+                <div class="card-body">
+                    <form asp-action="Delete" method="post">
+                        <input type="hidden" name="Id" value="@Model.Id"><hr>
+                        <h2><b> Are you want to delete @Model.Name Product?</b></h2>
+
+                        <div class="d-inline-flex gap-1">
+                        
+                                <input type="submit" value="Delete" class="btn btn-danger btn-lg" />
+                                <a class="btn btn-secondary btn-lg" asp-action="Index" asp-controller="Product"> Cancel </a>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</center>
+
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+
